@@ -42,9 +42,9 @@ goodbyeMessage = "You have now come to the end of our experiment.\nFor more info
 
 Symbols = 'L R'.split()
 
-orderFile = 'C:/Users/sun/Downloads/Nanyang/leapEEG/order.txt'
+orderFile = 'order.txt'
 
-AudioDir = 'C:/Users/sun/Downloads/Nanyang/real/'
+AudioDir = '/home/leapadmin/Desktop/L2speech/real/'
 AudioFiles = os.listdir(AudioDir)
 StimsAudio = [ sound.Sound(AudioDir+filename) for filename in AudioFiles ]
 
@@ -58,9 +58,9 @@ mov = visual.MovieStim(win, name='mov',filename=u'movie.mp4', size=[480,360], fl
 #enable parallel port access with:
 #sudo modprobe -r lp
 
-#port = parallel.ParallelPort('/dev/paAurport0')
-#core.wait(2)
-#port.setData(0)
+port = parallel.ParallelPort('/dev/parport0')
+core.wait(2)
+port.setData(0)
 
 data = []
 
@@ -123,9 +123,9 @@ while continueMovie:
     if t >= isi:
         if LRorder['symbols'][num] == 'L':
             print("L")
-            #port.setData(1)
+            port.setData(1)
         elif LRorder['symbols'][num] == 'R':
-            #port.setData(2)
+            port.setData(2)
             print("R")
         else:
             print("there is error for LRorder")
@@ -134,7 +134,7 @@ while continueMovie:
         audioPlay(num).play()
         num = num + 1
         isi = isi + 3
-        #port.setData(0)
+        port.setData(0)
     if mov.status == FINISHED:  # force-end the routine
         continueMovie = False
     
