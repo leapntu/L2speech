@@ -32,11 +32,11 @@ get_metadata()
 
 ###CONSTANTS AND PARAMETERS###
 
-introMessage = "Welcome to our cognitive brain Test! \nYou will be given a break at the end of movie. Please rest for as long as you need to during the breaks given, or continue to the next round if you are able to power through!\nPlease ensure that you are in a quiet room and have earphones to listen to the words before starting the task.\nPress SPACEBAR when you are ready."
+introMessage = "Welcome to our cognitive brain Test! \nFor this test, you need to focus on the silent cartoon.\nWe will ask you about the cartoon at the end of movie.\nAfter that, you will have a rest time.\nPlease rest for as long as you need to during the breaks given, or continue to the next test if you are able to power through!\nPress SPACEBAR when you are ready."
 
 restMessage = "You can now take a break for as long as you need to before continuing.\nPlease press SPACEBAR when you are ready to continue."
 
-intro2Message = "Press SPACEBAR when you are ready."
+intro2Message = "For this test, you will also watch another silent cartoon widh differnt sound.\nPlease press SPACEBAR when you are ready to continue."
 
 goodbyeMessage = "You have now come to the end of our experiment.\nFor more information on our study, please refer to our debrief notes.\nThank you for your time and participation!"
 
@@ -49,7 +49,7 @@ orderFile2 = '/home/leapadmin/Desktop/L2speech/order2.txt'
 AudioDir = '/home/leapadmin/Desktop/L2speech/real/'
 AudioDir2 = '/home/leapadmin/Desktop/L2speech/real2/'
 AudioFiles = os.listdir(AudioDir)
-AudioFiles2 = os.listdir(AudioDir)
+AudioFiles2 = os.listdir(AudioDir2)
 StimsAudio = [ sound.Sound(AudioDir+filename) for filename in AudioFiles ]
 StimsAudio2 = [ sound.Sound(AudioDir2+filename) for filename in AudioFiles2 ]
 
@@ -58,8 +58,8 @@ rest = visual.TextStim(win, text=restMessage)
 intro2 = visual.TextStim(win, text=intro2Message, height = .07, wrapWidth = 1.5)
 goodbye = visual.TextStim(win, text=goodbyeMessage)
 
-mov = visual.MovieStim(win, name='mov',filename=u'movie.mp4', size=[480,360], flipVert=False, flipHoriz=False, loop=False)
-mov2 = visual.MovieStim(win, name='mov2',filename=u'movie2.mp4', size=[480,360], flipVert=False, flipHoriz=False, loop=False)
+mov = visual.MovieStim(win, name='mov',filename=u'mov.mp4', size=[480,360], flipVert=False, flipHoriz=False, loop=False)
+mov2 = visual.MovieStim(win, name='mov2',filename=u'mov2.mp4', size=[480,360], flipVert=False, flipHoriz=False, loop=False)
 
 #enable parallel port access with:
 #sudo modprobe -r lp
@@ -79,7 +79,7 @@ def setSymbols():
     
 def setSymbols2():
     lookupDict = {}
-    for symbol, audio in zip(Symbols2, StimsAudio):
+    for symbol, audio in zip(Symbols2, StimsAudio2):
         lookupDict[symbol] = [audio]
     return lookupDict
 
@@ -122,7 +122,6 @@ frameN = -1
 num=0
 isi=1.2
 l_port = 1
-r_port = 3
 
 while continueMovie:
     t = testClock.getTime()
@@ -136,9 +135,10 @@ while continueMovie:
         mov.setAutoDraw(True)
         
     if t >= isi:
+        port.setData(0)
         if LRorder['symbols'][num] == 'L' and LRorder['symbols'][num-1] == 'R':
             print("RL")
-            port.setData(5)
+            port.setData(4)
         elif LRorder['symbols'][num] == 'L' and LRorder['symbols'][num-1] == 'L':
             print("L")
             if l_port == 1:
@@ -148,12 +148,7 @@ while continueMovie:
                 port.setData(2)
                 l_port = 1
         elif LRorder['symbols'][num] == 'R':
-            if r_port == 3:
-                port.setData(3)
-                r_port = 4
-            elif r_port =4:
-                port.setData(4)
-                r_port = 3
+            port.setData(3)
             print("R")
         else:
             print("there is error for LRorder")
@@ -162,6 +157,7 @@ while continueMovie:
         audioPlay(num).play()
         num = num + 1
         isi = isi + 1.2
+        
         
     if mov.status == FINISHED:  # force-end the routine
         continueMovie = False
@@ -207,7 +203,6 @@ frameN2 = -1
 num2=0
 isi2=1.2
 t_port = 6
-d_port = 8
 
 while continueMovie2:
     t2 = test2Clock.getTime()
@@ -221,36 +216,32 @@ while continueMovie2:
         mov2.setAutoDraw(True)
         
     if t2 >= isi2:
+        port.setData(0)
         if TDorder['symbols'][num2] == 'T' and TDorder['symbols'][num2-1] == 'D':
             print("DT")
-            port.setData(10)
+            port.setData(8)
         elif TDorder['symbols'][num2] == 'T' and TDorder['symbols'][num2-1] == 'T':
             print("T")
-            if t_port == 6:
-                port.setData(6)
-                t_port = 7
-            elif t_port ==2:
-                port.setData(7)
+            if t_port == 5:
+                port.setData(5)
                 t_port = 6
-        elif LRorder['symbols'][num] == 'D':
-            if d_port == 8:
-                port.setData(8)
-                d_port = 9
-            elif d_port ==9:
-                port.setData(9)
-                d_port = 8
+            elif t_port ==6:
+                port.setData(6)
+                t_port = 5
+        elif TDorder['symbols'][num2] == 'D':
+            port.setData(7)
             print("D")
         else:
             print("there is error for TDorder")
-        audioPlay2(num).tStart = t2  # underestimates by a little under one frame
-        audioPlay2(num).frameNStart = frameN2  # exact frame index
-        audioPlay2(num).play()
+        audioPlay2(num2).tStart = t2  # underestimates by a little under one frame
+        audioPlay2(num2).frameNStart = frameN2  # exact frame index
+        audioPlay2(num2).play()
         num2 = num2 + 1
         isi2 = isi2 + 1.2
         
     if mov2.status == FINISHED:  # force-end the routine
         continueMovie2 = False
-    if num2 == 8:
+    if num2 == 300:
         continueMovie2 = False
             
 #    mov.draw()
