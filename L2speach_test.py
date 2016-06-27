@@ -36,9 +36,9 @@ introMessage = "Welcome to our cognitive brain Test! \nFor this test, you need t
 
 restMessage = "You can now take a break for as long as you need to before continuing.\nPlease press SPACEBAR when you are ready to continue."
 
-intro2Message = "For this test, you will also watch another silent cartoon widh differnt sound.\nPlease press SPACEBAR when you are ready to continue."
+intro2Message = "For this test, you will also watch another silent cartoon with differnt sound.\nPlease press SPACEBAR when you are ready to continue."
 
-goodbyeMessage = "You have now come to the end of our experiment.\nFor more information on our study, please refer to our debrief notes.\nThank you for your time and participation!"
+goodbyeMessage = "You have now come to the end of this experiment.\nFor more information on our study, please refer to our debrief notes.\nThank you for your time and participation!"
 
 Symbols = 'L R'.split()
 Symbols2 = 'T D'.split()
@@ -161,7 +161,7 @@ while continueMovie:
         
     if mov.status == FINISHED:  # force-end the routine
         continueMovie = False
-    if num == 300:
+    if num == 12:
         continueMovie = False
             
 #    mov.draw()
@@ -241,7 +241,7 @@ while continueMovie2:
         
     if mov2.status == FINISHED:  # force-end the routine
         continueMovie2 = False
-    if num2 == 300:
+    if num2 == 12:
         continueMovie2 = False
             
 #    mov.draw()
@@ -252,7 +252,7 @@ while continueMovie2:
         
     
     # refresh the screen
-    if continueMovie:  # don't flip if this routine is over or we'll get a blank screen
+    if continueMovie2:  # don't flip if this routine is over or we'll get a blank screen
         win.flip()
 
 mov2.setAutoDraw(False)    
