@@ -1,3 +1,9 @@
+# -*- coding: utf-8 -*-
+import sys  
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
+
 from psychopy import visual, core, parallel, event, gui, sound
 import pyglet, os, random, copy
 from pyo import *
@@ -5,7 +11,7 @@ import sys # to get file system encoding
 from psychopy.constants import *  # things like STARTED, FINISHED
 
 ###ENVIRONMENT AND LOADING###
-win = visual.Window([1280,1024])
+win = visual.Window([1920,1280])
     
 loadMessage = visual.TextStim(win, text="Loading Stimuli\n\nPlease Wait")
 loadMessage.draw()
@@ -13,6 +19,8 @@ loadMessage.draw()
 win.flip()
 
 info = []
+
+
 
 def get_metadata():
   global info
@@ -32,13 +40,20 @@ get_metadata()
 
 ###CONSTANTS AND PARAMETERS###
 
-introMessage = "Welcome to our cognitive brain Test! \nFor this test, you need to focus on the silent cartoon.\nWe will ask you about the cartoon at the end of movie.\nAfter that, you will have a rest time.\nPlease rest for as long as you need to during the breaks given, or continue to the next test if you are able to power through!\nPress SPACEBAR when you are ready."
+preIntroMessage = "Welcome to the LEAP Lab!\n We have prepared some tests for you to measure your ability to distinguish English sounds.\n The whole testing session will take about 1 and half hour including the break time.\n It is important that you pay attention during each test. If you feel tired you can always take a break after each test. \n If you have any questions, please ask the assistant before and after each test.\n\n Ready? Let's begin! Press the 'SPACEBAR' to begin."
+preIntroMessageJa = "LEAPラボへようこそ！\n私たちは、英語の発音をあなたがどれくらい聞き取れているかを測るテストをいくつか用意しました。\n全体のテストセッションは、休憩時間を含めて約1時間半かかります。\nテスト中は、集中して受けてください。\n疲れを感じた場合は、各テストセッション終了後に休憩をとることができます。\n質問がある場合は、それぞれのテストの前後にアシスタントに聞いてください。\n\n準備はよろしいですか？ それでは、はじめます!\n  [スペースキー]を押して開始してください。"
 
-restMessage = "You can now take a break for as long as you need to before continuing.\nPlease press SPACEBAR when you are ready to continue."
+introMessage = "For this test, you will watch a silent cartoon of the movie, while listening to English sounds.\n Please sit comfortably on your chair and try to stay comfortably still, without moving your head, arms and hands too much. \n At the end of the movie, I will ask you about the movie so please focus on it.\nAfter that, you can take a rest for as long as you need to.\n \nPress SPACEBAR when you are ready."
+introMessageJa = "このテストでは、英語の音を聞きながら映画のサイレント漫画を観てもらいます。\n快適な椅子に座り、頭や腕や手をあまり動かさないようにしてください。 \n映画が終わったら、映画についてお聞きするので、注意してご覧ください。 \nそのあとで、必要であれば休憩をとるとこができます。 \n\n準備が出来たら、[スペースキー]を押してください。 "
 
-intro2Message = "For this test, you will also watch another silent cartoon with differnt sound.\nPlease press SPACEBAR when you are ready to continue."
+restMessage = "You can now take a break for as long as you need to before continuing.\n Please press SPACEBAR when you are ready to continue."
+restMessageJa = "次のテストに入る前に必要であれば休憩を取ることができます。\n 準備が出来たら、[スペースキー]を押してください。"
 
-goodbyeMessage = "You have now come to the end of this experiment.\nFor more information on our study, please refer to our debrief notes.\nThank you for your time and participation!"
+intro2Message = "For this test, you will also watch another silent cartoon with different sounds.\n Please sit comfortably on your chair and try to stay comfortably still, without moving your head, arms and hands too much.\n At the end of the movie, I will ask you about the movie so please focus on it.\n Please press SPACEBAR when you are ready to continue.\n" 
+intro2MessageJa = "このテストでは、先程とは違うサイレント漫画を違う音と一緒に観てもらいます。\n快適な椅子に座り、頭や腕や手をあまり動かさないようにしてください。 \n映画が終わったら、映画についてお聞きするので、注意してご覧ください。\n 準備が出来たら、[スペースキー]を押してください。" 
+
+goodbyeMessage = "You have now come to the end of first experiment.\n\n Press 'SPACEBAR' for more test."
+goodbyeMessageJa = "これで、 最初の語学テストは終了です \n\n [スペースキー]を押して、終了してください。" 
 
 Symbols = 'L R'.split()
 Symbols2 = 'T D'.split()
@@ -53,16 +68,30 @@ AudioFiles2 = os.listdir(AudioDir2)
 StimsAudio = [ sound.Sound(AudioDir+filename) for filename in AudioFiles ]
 StimsAudio2 = [ sound.Sound(AudioDir2+filename) for filename in AudioFiles2 ]
 
+preintro = visual.TextStim(win, text=preIntroMessage, height = .07, wrapWidth = 1.5)
 intro = visual.TextStim(win, text=introMessage, height = .07, wrapWidth = 1.5)
-rest = visual.TextStim(win, text=restMessage)
+rest = visual.TextStim(win, text=restMessage,pos = (0,0.4), height = .07, wrapWidth = 1.5)
 intro2 = visual.TextStim(win, text=intro2Message, height = .07, wrapWidth = 1.5)
-goodbye = visual.TextStim(win, text=goodbyeMessage)
+goodbye = visual.TextStim(win, text=goodbyeMessage,height = .07,pos = (0,0.4), wrapWidth = 1.5)
+
+preintroJa = visual.TextStim(win, text=preIntroMessageJa, height = .06, wrapWidth = 1.5,font='TakaoMincho')
+introJa = visual.TextStim(win, text=introMessageJa, height = .07, wrapWidth = 1.5,font='TakaoMincho')
+restJa = visual.TextStim(win, text=restMessageJa,pos = (0,-0.4),font='TakaoMincho', height = .07, wrapWidth = 1.5)
+intro2Ja = visual.TextStim(win, text=intro2MessageJa, height = .07, wrapWidth = 1.5,font='TakaoMincho')
+goodbyeJa = visual.TextStim(win, text=goodbyeMessageJa,height = .07,pos = (0,-0.4), wrapWidth = 1.5,font='TakaoMincho')
 
 mov = visual.MovieStim(win, name='mov',filename=u'mov.mp4', size=[480,360], flipVert=False, flipHoriz=False, loop=False)
 mov2 = visual.MovieStim(win, name='mov2',filename=u'mov2.mp4', size=[480,360], flipVert=False, flipHoriz=False, loop=False)
 
 #enable parallel port access with:
 #sudo modprobe -r lp
+
+preintro.draw()
+win.flip()
+event.waitKeys(keyList=['space'])
+preintroJa.draw()
+win.flip()
+event.waitKeys(keyList=['space'])
 
 port = parallel.ParallelPort('/dev/parport0')
 core.wait(2)
@@ -102,6 +131,9 @@ def parseBlocks(orderFile):
 lookup = setSymbols()
 LRorder = parseBlocks(orderFile)
 intro.draw()
+win.flip()
+event.waitKeys(keyList=['space'])
+introJa.draw()
 win.flip()
 event.waitKeys(keyList=['space'])
 
@@ -161,7 +193,7 @@ while continueMovie:
         
     if mov.status == FINISHED:  # force-end the routine
         continueMovie = False
-    if num == 12:
+    if num == 300:
         continueMovie = False
             
 #    mov.draw()
@@ -179,12 +211,16 @@ mov.setAutoDraw(False)
 core.wait(3)
 
 rest.draw()
+restJa.draw()
 win.flip()
 event.waitKeys(keyList=['space'])
 
 lookup2 = setSymbols2()
 TDorder = parseBlocks(orderFile2)
 intro2.draw()
+win.flip()
+event.waitKeys(keyList=['space'])
+intro2Ja.draw()
 win.flip()
 event.waitKeys(keyList=['space'])
 
@@ -202,7 +238,7 @@ t2=0
 frameN2 = -1
 num2=0
 isi2=1.2
-t_port = 6
+t_port = 5
 
 while continueMovie2:
     t2 = test2Clock.getTime()
@@ -241,7 +277,7 @@ while continueMovie2:
         
     if mov2.status == FINISHED:  # force-end the routine
         continueMovie2 = False
-    if num2 == 12:
+    if num2 == 300:
         continueMovie2 = False
             
 #    mov.draw()
@@ -259,6 +295,7 @@ mov2.setAutoDraw(False)
 core.wait(3)
 
 goodbye.draw()
+goodbyeJa.draw()
 win.flip()
 event.waitKeys(keyList=['space'])
 win.close()
